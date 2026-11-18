@@ -6,7 +6,15 @@ pensé pour que **ton agent** s'en serve sans que tu lui réexpliques.
 Tu commandes une machine chez n'importe quel hébergeur, tu clones ce dépôt, tu lances une
 commande. Ensuite tu parles à ton agent, et c'est lui qui installe, déploie et vérifie.
 
-## En trois commandes
+## Avant de t'en servir
+
+Ces scripts n'ont jamais tourné sur une vraie machine. Ils sont relus, pas éprouvés.
+
+Ils touchent à l'accès SSH et au pare-feu : une erreur t'enferme dehors de ton propre serveur.
+Essaie-les sur une machine jetable avant la vraie. Pendant le durcissement, garde une
+deuxième session ouverte et vérifie que tu entres toujours avant de fermer la première.
+
+## En quatre commandes
 
 ```sh
 git clone <ce-dépôt> serveur && cd serveur
