@@ -1,0 +1,23 @@
+# Squelette d'un service. Copie ce dossier, change le nom et l'adresse, et c'est tout.
+#
+# Règles : aucun port publié vers l'extérieur, le service rejoint le réseau du reverse
+# proxy, et les variables sensibles sont déclarées par leur nom, jamais par leur valeur.
+services:
+  demo:
+    image: traefik/whoami
+    restart: unless-stopped
+    networks: [proxy]
+    # Les valeurs viennent du coffre au lancement. Rien ici, rien dans le dépôt.
+    environment:
+      - EXEMPLE_DE_SECRET
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.demo.rule=Host(`demo.exemple.fr`)
+      - traefik.http.routers.demo.entrypoints=https
+      - traefik.http.routers.demo.tls.certresolver=letsencrypt
+      - traefik.http.services.demo.loadbalancer.server.port=80
+
+networks:
+  proxy:
+    name: proxy
+    external: true

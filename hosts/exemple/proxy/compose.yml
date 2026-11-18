@@ -1,0 +1,39 @@
+# Reverse proxy de la machine : un seul point d'entrée, certificats automatiques.
+# Aucun autre service ne publie de port vers l'extérieur.
+#
+# Avant de démarrer : remplace l'adresse de courriel ci-dessous, c'est elle qui reçoit les
+# avertissements d'expiration de certificat.
+services:
+  traefik:
+    image: traefik:v3.7
+    restart: unless-stopped
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=proxy
+      - --entrypoints.http.address=:80
+      - --entrypoints.http.http.redirections.entrypoint.to=https
+      - --entrypoints.http.http.redirections.entrypoint.scheme=https
+      - --entrypoints.https.address=:443
+      - --certificatesresolvers.letsencrypt.acme.email=TON_ADRESSE@exemple.fr
+      - --certificatesresolvers.letsencrypt.acme.storage=/acme/acme.json
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http
+      - --ping=true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/acme
+    networks: [proxy]
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 30s
+
+volumes:
+  acme:
+
+networks:
+  proxy:
+    name: proxy
+    external: true
